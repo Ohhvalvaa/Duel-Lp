@@ -1,0 +1,284 @@
+@font-face {
+  font-family: "Bebas Neue";
+  src: url("fonts/bebas-neue.woff2") format("woff2");
+  font-display: swap;
+}
+
+:root {
+  --black: #000;
+  --panel: rgb(10 10 10 / .74);
+  --key: rgb(28 28 28 / .9);
+  --line: rgb(255 255 255 / .16);
+  --grey: #a3a3a3;
+  --white: #fff;
+  --gap: 8px;
+  --font: "Bebas Neue", "Arial Narrow", Impact, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; }
+[hidden] { display: none !important; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--black);
+  color: var(--white);
+  font-family: var(--font);
+  letter-spacing: .03em;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  user-select: none;
+  -webkit-user-select: none;
+  overscroll-behavior: none;
+}
+
+body {
+  background: var(--black) url("img/bg.jpg") center / cover no-repeat;
+}
+
+button {
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  border: 0;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+button:focus-visible, input:focus-visible { outline: 2px solid var(--white); outline-offset: 2px; }
+
+/* Orizzontale: giocatori ai lati, tastierino al centro. */
+.app {
+  height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(236px, 38vw, 360px) minmax(0, 1fr);
+  gap: var(--gap);
+  padding:
+    max(8px, env(safe-area-inset-top))
+    max(10px, env(safe-area-inset-right))
+    max(8px, env(safe-area-inset-bottom))
+    max(10px, env(safe-area-inset-left));
+}
+
+.player {
+  position: relative;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 10px;
+  background: var(--panel);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color .15s, box-shadow .15s, background-color .15s;
+}
+/* Il giocatore che riceve i punti si illumina: e' l'unico segnale, non servono caselle. */
+.player[data-active="false"] .lp { color: #858585; }
+.player[data-active="true"] {
+  background: rgb(46 46 46 / .86);
+  border-color: var(--white);
+  box-shadow: 0 0 30px rgb(255 255 255 / .5), inset 0 0 44px rgb(255 255 255 / .16);
+}
+.player[data-active="true"] .lp { text-shadow: 0 0 20px rgb(255 255 255 / .7); }
+.player[data-out="true"] .lp { color: var(--grey); }
+
+.entry {
+  min-height: 36px;
+  font-size: 32px;
+  line-height: 36px;
+  font-variant-numeric: tabular-nums;
+}
+
+.player.hit { animation: shake .32s; }
+.player.hit::after, .player.gain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--white);
+  pointer-events: none;
+  animation: flash .32s forwards;
+}
+@keyframes shake {
+  20% { transform: translateX(-6px); }
+  45% { transform: translateX(5px); }
+  70% { transform: translateX(-3px); }
+}
+@keyframes flash { from { opacity: .28; } to { opacity: 0; } }
+
+.name {
+  width: 100%;
+  border: 0;
+  background: none;
+  color: var(--grey);
+  font-family: var(--font);
+  font-size: 20px; /* sotto i 16px iOS ingrandisce la pagina quando si scrive */
+  letter-spacing: .08em;
+  text-align: center;
+  text-transform: uppercase;
+  user-select: text;
+  -webkit-user-select: text;
+}
+.player[data-active="true"] .name { color: var(--white); }
+
+.lp {
+  font-size: clamp(52px, min(32vh, 12.5vw), 150px);
+  line-height: .95;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 2px 16px rgb(0 0 0 / .8);
+}
+
+.bar {
+  width: 78%;
+  height: 4px;
+  border-radius: 2px;
+  background: rgb(255 255 255 / .16);
+  overflow: hidden;
+}
+.bar-fill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: var(--white);
+  transition: width .45s cubic-bezier(.2, .8, .2, 1);
+}
+
+.halve {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: rgb(255 255 255 / .1);
+  color: var(--white);
+  font-size: 22px;
+}
+.halve:active { background: rgb(255 255 255 / .3); }
+
+.delta {
+  position: absolute;
+  top: 22%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 38px;
+  color: var(--white);
+  text-shadow: 0 2px 10px var(--black);
+  pointer-events: none;
+  animation: rise .9s ease-out forwards;
+}
+@keyframes rise {
+  from { transform: translateY(14px) scale(.9); opacity: 0; }
+  20% { transform: translateY(0) scale(1.1); opacity: 1; }
+  to { transform: translateY(-34px) scale(1); opacity: 0; }
+}
+
+.center {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.status {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+}
+
+.icon-button {
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--key);
+  color: var(--grey);
+}
+.icon-button svg { width: 30px; height: 30px; }
+.icon-button:active { background: #3a3a3a; }
+
+.keypad {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: var(--gap);
+}
+.keypad button {
+  min-height: 0;
+  border-radius: 8px;
+  background: var(--key);
+  font-size: clamp(24px, 8vh, 34px);
+  line-height: 1;
+}
+.keypad button:active { background: #4a4a4a; }
+.keypad .back { font-family: system-ui, sans-serif; font-size: 22px; color: var(--grey); }
+.keypad .sign { grid-column: 4; grid-row: span 2; font-size: clamp(40px, 14vh, 60px); }
+.keypad .minus { background: var(--white); color: var(--black); }
+.keypad .plus { background: #6e6e6e; color: var(--white); }
+.keypad .minus:active { background: #bdbdbd; }
+.keypad .plus:active { background: #929292; }
+
+/* Dado */
+.dice-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  background: rgb(0 0 0 / .88);
+}
+.dice-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.dice-result {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: max(6vh, env(safe-area-inset-bottom));
+  min-height: 1.2em;
+  color: var(--white);
+  font-size: 26px;
+  letter-spacing: .08em;
+  text-align: center;
+}
+
+dialog {
+  width: min(84vw, 380px);
+  margin: auto;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #141414;
+  color: var(--white);
+  text-align: center;
+}
+dialog::backdrop { background: rgb(0 0 0 / .72); }
+dialog h2 { font-size: 34px; font-weight: 400; line-height: 1.1; }
+dialog p { color: var(--grey); font-size: 19px; margin-top: 4px; }
+.dialog-buttons { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: var(--gap); margin-top: 14px; }
+.dialog-buttons button {
+  min-height: 46px;
+  border-radius: 8px;
+  background: #2b2b2b;
+  font-size: 20px;
+}
+.dialog-buttons button.primary { background: var(--white); color: var(--black); }
+
+/* Verticale: si usa ancora bene, anche se l'app e' pensata per l'orizzontale. */
+@media (orientation: portrait) {
+  .app {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: minmax(150px, 26dvh) minmax(0, 1fr);
+  }
+  .center { grid-column: 1 / -1; grid-row: 2; }
+  .lp { font-size: clamp(56px, 19vw, 96px); }
+  .keypad button { font-size: 32px; }
+  .keypad .sign { font-size: 60px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

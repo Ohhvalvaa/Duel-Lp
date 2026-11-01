@@ -1,9 +1,18 @@
 # Duel LP
 
-Calcolatore dei Life Point per i duelli di Yu-Gi-Oh. È una web app: gira su iPhone senza App Store e, dopo la prima apertura, anche senza rete.
+Segnapunti per i duelli di carte, pensato per il telefono in orizzontale: due giocatori, tastierino con `+` e `−`, tasto ½ e dado nero 3D. Funziona anche senza rete.
 
-**Installazione:** apri https://ohhvalvaa.github.io/duel-lp/ con Safari, tocca Condividi e poi "Aggiungi alla schermata Home".
+**Prova subito su iPhone:** apri https://ohhvalvaa.github.io/duel-lp/ con Safari, tocca Condividi e poi "Aggiungi alla schermata Home".
 
-**Uso:** tocca il giocatore, scrivi il valore (anche un calcolo, come `2500−1800`) e premi Danno o Cura.
+**Uso:** tocca un giocatore, che si illumina, scrivi i punti e premi `−` o `+`.
 
-**Sviluppo:** nessuna dipendenza. I test della logica si lanciano con `node --test`. Quando cambi un file, alza la versione di `CACHE` in `sw.js`, altrimenti i telefoni continuano a usare la copia vecchia.
+## Guide
+
+- [IOS.md](IOS.md): come creare l'app iOS sul Mac e pubblicarla sull'App Store.
+- [COME-E-FATTA.md](COME-E-FATTA.md): come è online senza Vercel.
+
+## Sviluppo
+
+L'app sta tutta in `docs/`, senza build. `npm test` prova la logica. Quando cambi un file, alza la versione di `CACHE` in `docs/sw.js`, altrimenti i telefoni continuano a usare la copia vecchia.
+
+Il carattere Bebas Neue è distribuito con licenza SIL OFL (`docs/fonts/OFL.txt`).

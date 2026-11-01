@@ -1,6 +1,6 @@
 // Copia l'app sul telefono cosi' funziona anche senza rete.
 // Quando cambia un file, alzare il numero di versione.
-const CACHE = 'duel-lp-v1';
+const CACHE = 'duel-lp-v2';
 const FILES = [
   './',
   'index.html',
@@ -8,6 +8,8 @@ const FILES = [
   'app.js',
   'logic.js',
   'manifest.webmanifest',
+  'fonts/bebas-neue.woff2',
+  'img/bg.jpg',
   'icons/icon-180.png',
   'icons/icon-192.png',
   'icons/icon-512.png',

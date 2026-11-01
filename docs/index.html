@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>Duel LP</title>
+  <meta name="theme-color" content="#000000">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Duel LP">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <article class="player" data-player="0">
+      <input class="name" aria-label="Nome giocatore 1" maxlength="14" autocomplete="off" spellcheck="false">
+      <output class="lp">8000</output>
+      <span class="bar"><span class="bar-fill"></span></span>
+      <span class="entry" aria-live="polite"></span>
+      <button class="halve" type="button" aria-label="Dimezza i Life Point del giocatore 1">½</button>
+    </article>
+
+    <section class="center">
+      <div class="status">
+        <button id="dice" class="icon-button" type="button" aria-label="Tira il dado">
+          <svg viewBox="0 0 32 32" aria-hidden="true">
+            <rect x="3" y="3" width="26" height="26" rx="6" fill="#050505" stroke="#fff" stroke-width="1.5"/>
+            <g fill="#fff"><circle cx="10" cy="10" r="2.4"/><circle cx="22" cy="10" r="2.4"/><circle cx="16" cy="16" r="2.4"/><circle cx="10" cy="22" r="2.4"/><circle cx="22" cy="22" r="2.4"/></g>
+          </svg>
+        </button>
+        <button id="new-duel" class="icon-button" type="button" aria-label="Nuovo duello">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 3v4.5h-4.5"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="keypad" aria-label="Tastierino">
+        <button type="button" data-key="7">7</button>
+        <button type="button" data-key="8">8</button>
+        <button type="button" data-key="9">9</button>
+        <button type="button" data-action="minus" class="sign minus" aria-label="Togli i punti">−</button>
+        <button type="button" data-key="4">4</button>
+        <button type="button" data-key="5">5</button>
+        <button type="button" data-key="6">6</button>
+        <button type="button" data-key="1">1</button>
+        <button type="button" data-key="2">2</button>
+        <button type="button" data-key="3">3</button>
+        <button type="button" data-action="plus" class="sign plus" aria-label="Aggiungi i punti">+</button>
+        <button type="button" data-key="0">0</button>
+        <button type="button" data-key="00">00</button>
+        <button type="button" data-key="back" class="back" aria-label="Cancella una cifra">⌫</button>
+      </div>
+    </section>
+
+    <article class="player" data-player="1">
+      <input class="name" aria-label="Nome giocatore 2" maxlength="14" autocomplete="off" spellcheck="false">
+      <output class="lp">8000</output>
+      <span class="bar"><span class="bar-fill"></span></span>
+      <span class="entry" aria-live="polite"></span>
+      <button class="halve" type="button" aria-label="Dimezza i Life Point del giocatore 2">½</button>
+    </article>
+  </main>
+
+  <div id="dice-stage" class="dice-stage" hidden>
+    <canvas id="dice-canvas" class="dice-canvas" aria-hidden="true"></canvas>
+    <p id="dice-result" class="dice-result" aria-live="polite"></p>
+  </div>
+
+  <dialog id="dialog">
+    <h2 id="dialog-title"></h2>
+    <p id="dialog-text"></p>
+    <div id="dialog-buttons" class="dialog-buttons"></div>
+  </dialog>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "appId": "com.ohhvalvaa.duellp",
+  "appName": "Duel LP",
+  "webDir": "docs",
+  "backgroundColor": "#000000",
+  "ios": {
+    "contentInset": "never"
+  }
+}
