@@ -12,13 +12,13 @@ const vibrate = (style = 'LIGHT') => native?.Haptics?.impact({ style }).catch(()
 const newPlayers = (names = ['Giocatore 1', 'Giocatore 2']) =>
   names.map((name) => ({ name, lp: START_LP }));
 
-let state = { players: newPlayers(), active: 0 };
+let state = { players: newPlayers(), active: 0, flipped: [false, false] };
 let entry = '';
 
 function load() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    if (saved?.players?.length === 2) state = saved;
+    if (saved?.players?.length === 2) state = { ...state, ...saved };
   } catch { /* si riparte da un duello nuovo */ }
 }
 
@@ -59,6 +59,7 @@ function render() {
     if (document.activeElement !== input) input.value = player.name;
     card.dataset.active = String(p === state.active);
     card.dataset.out = String(player.lp === 0);
+    card.dataset.flipped = String(Boolean(state.flipped[p]));
     card.querySelector('.bar-fill').style.width = `${Math.min(100, (player.lp / START_LP) * 100)}%`;
     card.querySelector('.entry').textContent = p === state.active ? entry : '';
     animateLp(p, player.lp);
@@ -129,7 +130,7 @@ function applyEntry(compute) {
 }
 
 function resetDuel() {
-  state = { players: newPlayers(state.players.map((player) => player.name)), active: 0 };
+  state = { ...state, players: newPlayers(state.players.map((player) => player.name)), active: 0 };
   entry = '';
   render();
 }
@@ -270,6 +271,11 @@ cards.forEach((card, p) => {
   });
   card.querySelector('.halve').addEventListener('click', () => {
     changeLp(p, halve);
+  });
+  card.querySelector('.flip').addEventListener('click', () => {
+    state.flipped[p] = !state.flipped[p];
+    vibrate();
+    render();
   });
   const input = card.querySelector('.name');
   input.addEventListener('keydown', (event) => {

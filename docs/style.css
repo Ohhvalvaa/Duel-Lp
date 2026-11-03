@@ -73,8 +73,11 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--white); out
   border-radius: 10px;
   cursor: pointer;
   overflow: hidden;
-  transition: border-color .15s, box-shadow .15s, background-color .15s;
+  transition: border-color .15s, box-shadow .15s, background-color .15s, rotate .3s;
 }
+/* Giocatore ruotato: chi sta dall'altra parte del tavolo lo legge dritto.
+   rotate e non transform, cosi' non si scontra con l'animazione del colpo. */
+.player[data-flipped="true"] { rotate: 180deg; }
 /* Il giocatore che riceve i punti si illumina: e' l'unico segnale, non servono caselle. */
 .player[data-active="false"] .lp { color: #858585; }
 .player[data-active="true"] {
@@ -156,7 +159,21 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--white); out
   color: var(--white);
   font-size: 22px;
 }
-.halve:active { background: rgb(255 255 255 / .3); }
+.halve:active, .flip:active { background: rgb(255 255 255 / .3); }
+
+.flip {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: rgb(255 255 255 / .1);
+  color: var(--white);
+}
+.flip svg { width: 38px; height: 38px; }
 
 .delta {
   position: absolute;
