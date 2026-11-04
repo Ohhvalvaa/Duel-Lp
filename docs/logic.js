@@ -30,6 +30,9 @@ export const remember = (history, lps, max = 100) => [...history, [...lps]].slic
 /** Toglie l'ultima voce: [cronologia rimasta, Life Point da ripristinare oppure null]. */
 export const undo = (history) => (history.length ? [history.slice(0, -1), history.at(-1)] : [history, null]);
 
+/** Segnalino del giocatore: da 0 a 99 (i salvataggi vecchi non ce l'hanno: valgono 0). */
+export const stepCounter = (value, delta) => Math.min(99, Math.max(0, (value || 0) + delta));
+
 /** I Life Point non scendono mai sotto zero. */
 export const damage = (lp, amount) => Math.max(0, lp - amount);
 export const heal = (lp, amount) => lp + amount;

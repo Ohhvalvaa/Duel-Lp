@@ -160,6 +160,47 @@ button:focus-visible { outline: 2px solid var(--white); outline-offset: 2px; }
 }
 .flip svg { width: 38px; height: 38px; }
 
+/* Segnalino tra il tasto gira e ½: − valore + */
+.counter {
+  position: absolute;
+  left: 58px;
+  right: 58px;
+  bottom: 8px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: rgb(255 255 255 / .06);
+}
+.counter button {
+  flex: 0 1 36px;
+  min-width: 0;
+  height: 100%;
+  border-radius: 8px;
+  background: none;
+  color: var(--white);
+  font-size: 26px;
+  line-height: 1;
+}
+.counter button:active { background: rgb(255 255 255 / .3); }
+/* Pannello stretto (telefoni piccoli, verticale): il segnalino sale sopra gira e ½, largo quanto il pannello. */
+.player { container-type: inline-size; }
+@container (max-width: 170px) {
+  .counter { left: 8px; right: 8px; bottom: 58px; }
+  /* i punti salgono per lasciare spazio alle due righe di tasti */
+  .lp, .bar, .entry { position: relative; top: -42px; }
+}
+.counter-value {
+  flex: 0 0 auto;
+  min-width: 1.6ch;
+  text-align: center;
+  font-size: 26px;
+  font-variant-numeric: tabular-nums;
+}
+
 .delta {
   position: absolute;
   top: 22%;
@@ -278,7 +319,7 @@ dialog p:empty { display: none; }
 @media (orientation: portrait) {
   .app {
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: minmax(150px, 26dvh) minmax(0, 1fr);
+    grid-template-rows: minmax(250px, 38dvh) minmax(0, 1fr);
   }
   .center { grid-column: 1 / -1; grid-row: 2; }
   .lp { font-size: clamp(56px, 19vw, 96px); }

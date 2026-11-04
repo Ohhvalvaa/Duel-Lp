@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { typeKey, damage, heal, halve, rollRotation, frontFace, FACES, PIPS, rollDie, remember, undo } from '../docs/logic.js';
+import { typeKey, damage, heal, halve, rollRotation, frontFace, FACES, PIPS, rollDie, remember, undo, stepCounter } from '../docs/logic.js';
 
 const type = (...keys) => keys.reduce(typeKey, '');
 
@@ -86,4 +86,11 @@ test('annulla: tiene solo le ultime voci', () => {
   for (let i = 0; i < 150; i++) h = remember(h, [i, 0]);
   assert.equal(h.length, 100);
   assert.deepEqual(h[0], [50, 0]);
+});
+
+test('segnalino: da 0 a 99', () => {
+  assert.equal(stepCounter(0, 1), 1);
+  assert.equal(stepCounter(0, -1), 0);
+  assert.equal(stepCounter(99, 1), 99);
+  assert.equal(stepCounter(undefined, 1), 1);
 });

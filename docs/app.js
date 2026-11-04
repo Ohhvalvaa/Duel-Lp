@@ -1,4 +1,4 @@
-import { START_LP, FACES, PIPS, typeKey, damage, heal, halve, rollRotation, rotatePoint, rollDie, remember, undo } from './logic.js';
+import { START_LP, FACES, PIPS, typeKey, damage, heal, halve, rollRotation, rotatePoint, rollDie, remember, undo, stepCounter } from './logic.js';
 
 const STORAGE_KEY = 'duel-lp-v2';
 const $ = (id) => document.getElementById(id);
@@ -10,7 +10,7 @@ const native = window.Capacitor?.isNativePlatform?.() ? window.Capacitor.Plugins
 const vibrate = (style = 'LIGHT') => native?.Haptics?.impact({ style }).catch(() => {});
 
 const newPlayers = (names = ['Giocatore 1', 'Giocatore 2']) =>
-  names.map((name) => ({ name, lp: START_LP }));
+  names.map((name) => ({ name, lp: START_LP, counter: 0 }));
 
 let state = { players: newPlayers(), active: 0, flipped: [false, false], history: [] };
 const lps = () => state.players.map((player) => player.lp);
@@ -60,6 +60,7 @@ function render() {
   state.players.forEach((player, p) => {
     const card = cards[p];
     card.dataset.active = String(p === state.active);
+    card.querySelector('.counter-value').textContent = player.counter || 0;
     card.dataset.out = String(player.lp === 0);
     card.dataset.flipped = String(Boolean(state.flipped[p]));
     card.querySelector('.bar-fill').style.width = `${Math.min(100, (player.lp / START_LP) * 100)}%`;
@@ -293,6 +294,13 @@ cards.forEach((card, p) => {
     vibrate();
     render();
   });
+  for (const [selector, delta] of [['.counter-minus', -1], ['.counter-plus', 1]]) {
+    card.querySelector(selector).addEventListener('click', () => {
+      state.players[p].counter = stepCounter(state.players[p].counter, delta);
+      vibrate();
+      render();
+    });
+  }
 });
 
 $('dice').addEventListener('click', rollDice);
