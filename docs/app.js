@@ -118,9 +118,8 @@ function changeLp(p, compute) {
   render();
 
   if (to === 0 && from !== 0) {
-    const winner = state.players[1 - p].name;
     vibrate('HEAVY');
-    openDialog(`${winner} vince!`, `${player.name} è a 0 LP.`, [
+    openDialog('Fine duello', '', [
       { label: 'Chiudi' },
       { label: 'Nuovo duello', primary: true, onClick: resetDuel },
     ]);

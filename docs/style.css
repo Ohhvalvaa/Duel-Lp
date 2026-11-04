@@ -264,6 +264,7 @@ dialog {
 dialog::backdrop { background: rgb(0 0 0 / .72); }
 dialog h2 { font-size: 34px; font-weight: 400; line-height: 1.1; }
 dialog p { color: var(--grey); font-size: 19px; margin-top: 4px; }
+dialog p:empty { display: none; }
 .dialog-buttons { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: var(--gap); margin-top: 14px; }
 .dialog-buttons button {
   min-height: 46px;
