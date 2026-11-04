@@ -1,4 +1,4 @@
-import { START_LP, FACES, PIPS, typeKey, damage, heal, halve, rollRotation, rotatePoint, rollDie } from './logic.js';
+import { START_LP, FACES, PIPS, typeKey, damage, heal, halve, rollRotation, rotatePoint, rollDie, remember, undo } from './logic.js';
 
 const STORAGE_KEY = 'duel-lp-v2';
 const $ = (id) => document.getElementById(id);
@@ -12,7 +12,8 @@ const vibrate = (style = 'LIGHT') => native?.Haptics?.impact({ style }).catch(()
 const newPlayers = (names = ['Giocatore 1', 'Giocatore 2']) =>
   names.map((name) => ({ name, lp: START_LP }));
 
-let state = { players: newPlayers(), active: 0, flipped: [false, false] };
+let state = { players: newPlayers(), active: 0, flipped: [false, false], history: [] };
+const lps = () => state.players.map((player) => player.lp);
 let entry = '';
 
 function load() {
@@ -55,6 +56,7 @@ function animateLp(p, target) {
 function render() {
   // Il tastierino si gira verso il giocatore selezionato.
   document.querySelector('.center').dataset.flipped = String(Boolean(state.flipped[state.active]));
+  $('undo').disabled = !state.history.length;
   state.players.forEach((player, p) => {
     const card = cards[p];
     card.dataset.active = String(p === state.active);
@@ -108,6 +110,7 @@ function changeLp(p, compute) {
   const to = compute(from);
   entry = '';
   if (to !== from) {
+    state.history = remember(state.history, lps());
     player.lp = to;
     showEffect(p, to - from);
     vibrate(to < from ? 'MEDIUM' : 'LIGHT');
@@ -130,8 +133,23 @@ function applyEntry(compute) {
 }
 
 function resetDuel() {
-  state = { ...state, players: newPlayers(state.players.map((player) => player.name)), active: 0 };
+  // Anche il nuovo duello si annulla: un tocco per sbaglio non fa perdere la partita.
+  const history = lps().every((lp) => lp === START_LP) ? state.history : remember(state.history, lps());
+  state = { ...state, players: newPlayers(state.players.map((player) => player.name)), active: 0, history };
   entry = '';
+  render();
+}
+
+function undoLast() {
+  const [history, previous] = undo(state.history);
+  if (!previous) return;
+  state.history = history;
+  entry = '';
+  previous.forEach((lp, p) => {
+    if (lp !== state.players[p].lp) showEffect(p, lp - state.players[p].lp);
+    state.players[p].lp = lp;
+  });
+  vibrate();
   render();
 }
 
@@ -279,6 +297,7 @@ cards.forEach((card, p) => {
 });
 
 $('dice').addEventListener('click', rollDice);
+$('undo').addEventListener('click', undoLast);
 $('dice-stage').addEventListener('click', () => {
   cancelAnimationFrame(rollFrame);
   $('dice-stage').hidden = true;

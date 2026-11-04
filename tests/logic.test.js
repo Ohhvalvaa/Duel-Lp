@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { typeKey, damage, heal, halve, rollRotation, frontFace, FACES, PIPS, rollDie } from '../docs/logic.js';
+import { typeKey, damage, heal, halve, rollRotation, frontFace, FACES, PIPS, rollDie, remember, undo } from '../docs/logic.js';
 
 const type = (...keys) => keys.reduce(typeKey, '');
 
@@ -68,4 +68,22 @@ test('dado: ogni faccia esce con la stessa probabilita', () => {
   const expected = n / 6;
   const chi2 = count.reduce((sum, c) => sum + (c - expected) ** 2 / expected, 0);
   assert.ok(chi2 < 20.5, `chi quadro ${chi2.toFixed(2)} con conteggi ${count}`); // 5 gradi di liberta', p = 0.001
+});
+
+test('annulla: torna indietro un passo alla volta', () => {
+  let h = [];
+  h = remember(h, [8000, 8000]);
+  h = remember(h, [7000, 8000]);
+  let [rest, lps] = undo(h);
+  assert.deepEqual(lps, [7000, 8000]);
+  [rest, lps] = undo(rest);
+  assert.deepEqual(lps, [8000, 8000]);
+  assert.deepEqual(undo(rest), [[], null]);
+});
+
+test('annulla: tiene solo le ultime voci', () => {
+  let h = [];
+  for (let i = 0; i < 150; i++) h = remember(h, [i, 0]);
+  assert.equal(h.length, 100);
+  assert.deepEqual(h[0], [50, 0]);
 });

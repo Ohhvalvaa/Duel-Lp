@@ -25,6 +25,11 @@ export function rollDie(random32 = cryptoRandom32) {
   return (x % 6) + 1;
 }
 
+/** Cronologia per "annulla": si salvano i Life Point di entrambi prima di ogni azione, al massimo `max`. */
+export const remember = (history, lps, max = 100) => [...history, [...lps]].slice(-max);
+/** Toglie l'ultima voce: [cronologia rimasta, Life Point da ripristinare oppure null]. */
+export const undo = (history) => (history.length ? [history.slice(0, -1), history.at(-1)] : [history, null]);
+
 /** I Life Point non scendono mai sotto zero. */
 export const damage = (lp, amount) => Math.max(0, lp - amount);
 export const heal = (lp, amount) => lp + amount;
