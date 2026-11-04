@@ -16,7 +16,6 @@
 <body>
   <main class="app">
     <article class="player" data-player="0">
-      <input class="name" aria-label="Nome giocatore 1" maxlength="14" autocomplete="off" spellcheck="false">
       <output class="lp">8000</output>
       <span class="bar"><span class="bar-fill"></span></span>
       <span class="entry" aria-live="polite"></span>
@@ -36,6 +35,7 @@
             <g fill="#fff"><circle cx="10" cy="10" r="2.4"/><circle cx="22" cy="10" r="2.4"/><circle cx="16" cy="16" r="2.4"/><circle cx="10" cy="22" r="2.4"/><circle cx="22" cy="22" r="2.4"/></g>
           </svg>
         </button>
+        <button id="back" class="icon-button back" type="button" data-key="back" aria-label="Cancella una cifra">⌫</button>
         <button id="new-duel" class="icon-button" type="button" aria-label="Nuovo duello">
           <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 3v4.5h-4.5"/>
@@ -57,12 +57,11 @@
         <button type="button" data-action="plus" class="sign plus" aria-label="Aggiungi i punti">+</button>
         <button type="button" data-key="0">0</button>
         <button type="button" data-key="00">00</button>
-        <button type="button" data-key="back" class="back" aria-label="Cancella una cifra">⌫</button>
+        <button type="button" data-key="000">000</button>
       </div>
     </section>
 
     <article class="player" data-player="1">
-      <input class="name" aria-label="Nome giocatore 2" maxlength="14" autocomplete="off" spellcheck="false">
       <output class="lp">8000</output>
       <span class="bar"><span class="bar-fill"></span></span>
       <span class="entry" aria-live="polite"></span>

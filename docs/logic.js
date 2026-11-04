@@ -11,6 +11,20 @@ export function typeKey(entry, key) {
   return entry + key;
 }
 
+/**
+ * Dado da 1 a 6 davvero uniforme. `random32` da' interi a 32 bit (di serie: crypto, non Math.random).
+ * Il semplice `% 6` favorirebbe 1-4 di pochissimo, perche' 2^32 non e' divisibile per 6:
+ * i valori oltre l'ultimo multiplo di 6 si scartano e si estrae di nuovo.
+ */
+const RANGE = 2 ** 32;
+const LIMIT = RANGE - (RANGE % 6);
+const cryptoRandom32 = () => crypto.getRandomValues(new Uint32Array(1))[0];
+export function rollDie(random32 = cryptoRandom32) {
+  let x;
+  do x = random32(); while (x >= LIMIT);
+  return (x % 6) + 1;
+}
+
 /** I Life Point non scendono mai sotto zero. */
 export const damage = (lp, amount) => Math.max(0, lp - amount);
 export const heal = (lp, amount) => lp + amount;

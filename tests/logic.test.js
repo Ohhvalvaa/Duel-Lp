@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { typeKey, damage, heal, halve, rollRotation, frontFace, FACES, PIPS } from '../docs/logic.js';
+import { typeKey, damage, heal, halve, rollRotation, frontFace, FACES, PIPS, rollDie } from '../docs/logic.js';
 
 const type = (...keys) => keys.reduce(typeKey, '');
 
@@ -43,4 +43,29 @@ test('dado: forma regolare', () => {
     const opposite = FACES.find((other) => other.value === 7 - face.value);
     assert.deepEqual(opposite.normal.map((n) => n + 0), face.normal.map((n) => 0 - n));
   }
+});
+
+test('scrittura: tasti 0, 00 e 000', () => {
+  assert.equal(type('000'), '');
+  assert.equal(type('1', '000'), '1000');
+  assert.equal(type('2', '5', '00'), '2500');
+  assert.equal(type('1', '0', '00'), '1000');
+  assert.equal(type('123', '000'), '123000');
+  assert.equal(type('1234', '000'), '1234');
+});
+
+test('dado: scarta i valori oltre l\'ultimo multiplo di 6', () => {
+  const draws = [2 ** 32 - 1, 2 ** 32 - 4, 5];
+  assert.equal(rollDie(() => draws.shift()), 6);
+  assert.equal(draws.length, 0);
+  assert.equal(rollDie(() => 0), 1);
+});
+
+test('dado: ogni faccia esce con la stessa probabilita', () => {
+  const n = 600000;
+  const count = [0, 0, 0, 0, 0, 0];
+  for (let i = 0; i < n; i++) count[rollDie() - 1]++;
+  const expected = n / 6;
+  const chi2 = count.reduce((sum, c) => sum + (c - expected) ** 2 / expected, 0);
+  assert.ok(chi2 < 20.5, `chi quadro ${chi2.toFixed(2)} con conteggi ${count}`); // 5 gradi di liberta', p = 0.001
 });

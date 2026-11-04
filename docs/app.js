@@ -1,4 +1,4 @@
-import { START_LP, FACES, PIPS, typeKey, damage, heal, halve, rollRotation, rotatePoint } from './logic.js';
+import { START_LP, FACES, PIPS, typeKey, damage, heal, halve, rollRotation, rotatePoint, rollDie } from './logic.js';
 
 const STORAGE_KEY = 'duel-lp-v2';
 const $ = (id) => document.getElementById(id);
@@ -53,10 +53,10 @@ function animateLp(p, target) {
 }
 
 function render() {
+  // Il tastierino si gira verso il giocatore selezionato.
+  document.querySelector('.center').dataset.flipped = String(Boolean(state.flipped[state.active]));
   state.players.forEach((player, p) => {
     const card = cards[p];
-    const input = card.querySelector('.name');
-    if (document.activeElement !== input) input.value = player.name;
     card.dataset.active = String(p === state.active);
     card.dataset.out = String(player.lp === 0);
     card.dataset.flipped = String(Boolean(state.flipped[p]));
@@ -142,7 +142,6 @@ const CAMERA = 7; // distanza dal dado: piu' e' piccola, piu' forte e' la prospe
 
 let rotation = [0, 0];
 let rollFrame = 0;
-const randomDie = () => (crypto.getRandomValues(new Uint32Array(1))[0] % 6) + 1;
 
 /** Punto (a, b) sul piano di una faccia, proiettato sullo schermo. */
 function projector(face, angles, cx, cy, size) {
@@ -211,7 +210,7 @@ function dropHeight(t, start) {
 function rollDice() {
   const stage = $('dice-stage');
   const canvas = $('dice-canvas');
-  const value = randomDie();
+  const value = rollDie();
   stage.hidden = false;
   $('dice-result').textContent = '';
 
@@ -250,7 +249,8 @@ function rollDice() {
 
 // --- Eventi ----------------------------------------------------------------
 
-document.querySelector('.keypad').addEventListener('click', (event) => {
+document.querySelector('.center').addEventListener('click', (event) => {
+  if (!event.target.closest('.keypad, #back')) return;
   const button = event.target.closest('button');
   if (!button) return;
   if (button.dataset.action === 'minus') applyEntry(damage);
@@ -263,8 +263,7 @@ document.querySelector('.keypad').addEventListener('click', (event) => {
 });
 
 cards.forEach((card, p) => {
-  // pointerdown, non click: quando un nome perde il focus WebKit puo' perdere il click,
-  // e i punti finirebbero sul giocatore sbagliato.
+  // pointerdown, non click: il giocatore si seleziona al primo tocco, senza ritardi.
   card.addEventListener('pointerdown', () => {
     state.active = p;
     render();
@@ -275,22 +274,6 @@ cards.forEach((card, p) => {
   card.querySelector('.flip').addEventListener('click', () => {
     state.flipped[p] = !state.flipped[p];
     vibrate();
-    render();
-  });
-  const input = card.querySelector('.name');
-  input.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') input.blur();
-  });
-  input.addEventListener('focus', () => {
-    state.active = p;
-    render();
-  });
-  input.addEventListener('input', () => {
-    state.players[p].name = input.value;
-    save();
-  });
-  input.addEventListener('blur', () => {
-    state.players[p].name = input.value.trim() || `Giocatore ${p + 1}`;
     render();
   });
 });

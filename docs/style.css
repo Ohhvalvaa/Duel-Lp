@@ -44,7 +44,7 @@ button {
   cursor: pointer;
   touch-action: manipulation;
 }
-button:focus-visible, input:focus-visible { outline: 2px solid var(--white); outline-offset: 2px; }
+button:focus-visible { outline: 2px solid var(--white); outline-offset: 2px; }
 
 /* Orizzontale: giocatori ai lati, tastierino al centro. */
 .app {
@@ -110,21 +110,6 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--white); out
   70% { transform: translateX(-3px); }
 }
 @keyframes flash { from { opacity: .28; } to { opacity: 0; } }
-
-.name {
-  width: 100%;
-  border: 0;
-  background: none;
-  color: var(--grey);
-  font-family: var(--font);
-  font-size: 20px; /* sotto i 16px iOS ingrandisce la pagina quando si scrive */
-  letter-spacing: .08em;
-  text-align: center;
-  text-transform: uppercase;
-  user-select: text;
-  -webkit-user-select: text;
-}
-.player[data-active="true"] .name { color: var(--white); }
 
 .lp {
   font-size: clamp(52px, min(32vh, 12.5vw), 150px);
@@ -199,14 +184,18 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--white); out
   display: flex;
   flex-direction: column;
   gap: var(--gap);
+  transition: rotate .3s;
 }
+/* Tastierino girato verso il giocatore selezionato, se quel pannello e' ruotato. */
+.center[data-flipped="true"] { rotate: 180deg; }
 
 .status {
   flex: 0 0 auto;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: var(--gap);
 }
+.status .back { font-family: system-ui, sans-serif; font-size: 22px; }
 
 .icon-button {
   height: 46px;
@@ -235,7 +224,6 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--white); out
   line-height: 1;
 }
 .keypad button:active { background: #4a4a4a; }
-.keypad .back { font-family: system-ui, sans-serif; font-size: 22px; color: var(--grey); }
 .keypad .sign { grid-column: 4; grid-row: span 2; font-size: clamp(40px, 14vh, 60px); }
 .keypad .minus { background: var(--white); color: var(--black); }
 .keypad .plus { background: #6e6e6e; color: var(--white); }
