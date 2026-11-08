@@ -2,7 +2,7 @@
 
 Segnapunti per i duelli di carte, pensato per il telefono in orizzontale: due giocatori, tastierino con `+` e `−`, tasto ½ e dado nero 3D. Funziona anche senza rete.
 
-**Prova subito su iPhone:** apri https://ohhvalvaa.github.io/duel-lp/ con Safari, tocca Condividi e poi "Aggiungi alla schermata Home".
+**Prova subito su iPhone:** apri https://ohhvalvaa.github.io/Duel-Lp/ con Safari, tocca Condividi e poi "Aggiungi alla schermata Home".
 
 **Uso:** tocca un giocatore, che si illumina, scrivi i punti e premi `−` o `+`.
 

@@ -11,8 +11,8 @@ L'app web sta in `docs/`. Capacitor la inserisce in un'app iOS vera, che funzion
 ## Prima volta
 
 ```sh
-git clone https://github.com/Ohhvalvaa/duel-lp.git
-cd duel-lp
+git clone https://github.com/Ohhvalvaa/Duel-Lp.git
+cd Duel-Lp
 npm run ios:setup
 git add -A && git commit -m "Aggiunge il progetto iOS" && git push
 npm run ios:open
@@ -32,7 +32,7 @@ Da controllare sul telefono vero: vibrazione, schermo che resta acceso, tacca de
 
 1. In Xcode scegli **Product → Archive**, poi **Distribute App** verso App Store Connect.
 2. In [App Store Connect](https://appstoreconnect.apple.com) crea l'app e prova la build con TestFlight.
-3. Compila la scheda. Privacy Policy: `https://ohhvalvaa.github.io/duel-lp/privacy.html`. Alla domanda sui dati raccolti rispondi **Data Not Collected**.
+3. Compila la scheda. Privacy Policy: `https://ohhvalvaa.github.io/Duel-Lp/privacy.html`. Alla domanda sui dati raccolti rispondi **Data Not Collected**.
 4. Invia alla revisione.
 
 ## Attenzione alla revisione Apple
