@@ -49,3 +49,5 @@ npm run ios:sync
 ```
 
 Alza la versione in Xcode, archivia e invia di nuovo. Per la versione web basta `git push`, ricordando di alzare `CACHE` in `docs/sw.js`.
+
+**Sfondo dalla galleria (novembre 2026):** se il progetto `ios/` esisteva già prima di questa novità, lancia di nuovo `npm run ios:setup`. Aggiunge in `Info.plist` i testi per galleria e fotocamera: senza, l'app si chiude quando si tocca il **+** nella scelta dello sfondo.

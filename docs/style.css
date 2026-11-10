@@ -233,7 +233,7 @@ button:focus-visible { outline: 2px solid var(--white); outline-offset: 2px; }
 .status {
   flex: 0 0 auto;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: var(--gap);
 }
 .icon-button:disabled { opacity: .35; cursor: default; }
@@ -314,6 +314,34 @@ dialog p:empty { display: none; }
   font-size: 20px;
 }
 .dialog-buttons button.primary { background: var(--white); color: var(--black); }
+
+/* Scelta dello sfondo: 5 predefiniti, quello del telefono e + per sceglierne uno dalla galleria. */
+.bg-dialog { width: min(92vw, 600px); }
+.bg-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--gap);
+  margin-top: 12px;
+}
+@media (orientation: portrait) { .bg-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.bg-tile {
+  aspect-ratio: 16 / 10;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 3px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #000 center / cover no-repeat;
+  font-size: 16px;
+  text-shadow: 0 1px 4px #000, 0 0 8px #000;
+}
+.bg-tile[aria-pressed="true"] {
+  border: 2px solid var(--white);
+  box-shadow: 0 0 14px rgb(255 255 255 / .45);
+}
+.bg-tile.add { align-items: center; padding: 0; background: #222; font-size: 40px; }
+.bg-tile.add:active { background: #3a3a3a; }
 
 /* Verticale: si usa ancora bene, anche se l'app e' pensata per l'orizzontale. */
 @media (orientation: portrait) {
