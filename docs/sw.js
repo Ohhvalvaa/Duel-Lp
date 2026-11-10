@@ -1,6 +1,6 @@
 // Copia l'app sul telefono cosi' funziona anche senza rete.
 // Quando cambia un file, alzare il numero di versione.
-const CACHE = 'duel-lp-v7';
+const CACHE = 'duel-lp-v9';
 const FILES = [
   './',
   'index.html',
