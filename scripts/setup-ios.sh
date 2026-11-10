@@ -20,13 +20,5 @@ for KEY in UISupportedInterfaceOrientations 'UISupportedInterfaceOrientations~ip
   /usr/libexec/PlistBuddy -c "Add :$KEY:1 string UIInterfaceOrientationLandscapeRight" "$PLIST"
 done
 
-# Il tasto + dello sfondo apre la galleria (iOS propone anche la fotocamera): senza questi testi l'app si chiude.
-for PAIR in "NSPhotoLibraryUsageDescription|Per scegliere una foto come sfondo." \
-            "NSCameraUsageDescription|Per scattare una foto da usare come sfondo."; do
-  KEY=${PAIR%%|*}
-  /usr/libexec/PlistBuddy -c "Delete :$KEY" "$PLIST" 2>/dev/null || true
-  /usr/libexec/PlistBuddy -c "Add :$KEY string ${PAIR#*|}" "$PLIST"
-done
-
 npx cap sync ios
 echo "Fatto. Apri il progetto con: npm run ios:open"

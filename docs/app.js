@@ -317,105 +317,10 @@ $('new-duel').addEventListener('click', () => {
   ]);
 });
 
-// --- Sfondo ----------------------------------------------------------------
-
-const BG_KEY = 'duel-lp-bg';
-const BG_PHOTO_KEY = 'duel-lp-bg-foto';
-const BACKGROUNDS = [
-  { id: 'esagoni', label: 'Esagoni', url: 'img/bg.jpg' },
-  { id: 'campo', label: 'Campo', url: 'img/bg-campo.svg' },
-  { id: 'cerchio', label: 'Cerchio', url: 'img/bg-cerchio.svg' },
-  { id: 'nebbia', label: 'Nebbia', url: 'img/bg-nebbia.svg' },
-  { id: 'linee', label: 'Linee', url: 'img/bg-linee.svg' },
-];
-// Le foto vengono scurite un po', cosi' i Life Point si leggono sempre.
-const DIM = 'linear-gradient(rgb(0 0 0 / .4), rgb(0 0 0 / .4))';
-
-function readStore(key) {
-  try { return localStorage.getItem(key); } catch { return null; }
-}
-function writeStore(key, value) {
-  try { localStorage.setItem(key, value); return true; } catch { return false; }
-}
-
-function backgroundImage(id) {
-  const photo = id === 'foto' && readStore(BG_PHOTO_KEY);
-  if (photo) return `${DIM}, url("${photo}")`;
-  const preset = BACKGROUNDS.find((bg) => bg.id === id) ?? BACKGROUNDS[0];
-  return `url("${preset.url}")`;
-}
-
-function setBackground(id) {
-  writeStore(BG_KEY, id);
-  document.body.style.backgroundImage = backgroundImage(id);
-  vibrate();
-}
-
-function bgTile(label, image, pressed, onClick, extraClass = '') {
-  const tile = document.createElement('button');
-  tile.type = 'button';
-  tile.className = `bg-tile ${extraClass}`.trim();
-  tile.textContent = label;
-  if (image) tile.style.backgroundImage = image;
-  if (pressed !== null) tile.setAttribute('aria-pressed', String(pressed));
-  tile.addEventListener('click', onClick);
-  return tile;
-}
-
-function openBackgrounds() {
-  const current = readStore(BG_KEY) || 'esagoni';
-  const photo = readStore(BG_PHOTO_KEY);
-  const choose = (id) => () => {
-    setBackground(id);
-    $('bg-dialog').close();
-  };
-  const tiles = BACKGROUNDS.map((bg) => bgTile(bg.label, `url("${bg.url}")`, bg.id === current, choose(bg.id)));
-  if (photo) tiles.push(bgTile('Foto', `url("${photo}")`, current === 'foto', choose('foto')));
-  const add = bgTile('+', '', null, () => $('bg-file').click(), 'add');
-  add.setAttribute('aria-label', 'Scegli una foto dalla galleria');
-  tiles.push(add);
-  $('bg-grid').replaceChildren(...tiles);
-  $('bg-dialog').showModal();
-}
-
-/** Rimpicciolisce la foto (max 1600 px) perche' stia nella memoria dell'app. */
-async function shrinkPhoto(file) {
-  const url = URL.createObjectURL(file);
-  try {
-    const img = new Image();
-    img.src = url;
-    await img.decode();
-    const scale = Math.min(1, 1600 / Math.max(img.naturalWidth, img.naturalHeight));
-    const canvas = document.createElement('canvas');
-    canvas.width = Math.round(img.naturalWidth * scale);
-    canvas.height = Math.round(img.naturalHeight * scale);
-    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-    return canvas.toDataURL('image/jpeg', 0.8);
-  } finally {
-    URL.revokeObjectURL(url);
-  }
-}
-
-$('background').addEventListener('click', openBackgrounds);
-$('bg-file').addEventListener('change', async (event) => {
-  const file = event.target.files?.[0];
-  event.target.value = '';
-  if (!file) return;
-  $('bg-dialog').close();
-  try {
-    if (!writeStore(BG_PHOTO_KEY, await shrinkPhoto(file))) throw new Error('memoria piena');
-    setBackground('foto');
-  } catch {
-    openDialog('Foto non caricata', 'Prova con un\'altra foto.', [{ label: 'Ok', primary: true }]);
-  }
-});
-
 // Tocco fuori dal dialogo = chiudi.
-for (const id of ['dialog', 'bg-dialog']) {
-  $(id).addEventListener('click', (event) => {
-    if (event.target === $(id)) $(id).close();
-  });
-}
+$('dialog').addEventListener('click', (event) => {
+  if (event.target === $('dialog')) $('dialog').close();
+});
 
 // Lo schermo resta acceso durante il duello.
 async function keepScreenOn() {
@@ -434,7 +339,6 @@ if (!native && 'serviceWorker' in navigator) {
 }
 
 load();
-document.body.style.backgroundImage = backgroundImage(readStore(BG_KEY) || 'esagoni');
 state.players.forEach((player, p) => {
   shown[p] = player.lp;
 });
